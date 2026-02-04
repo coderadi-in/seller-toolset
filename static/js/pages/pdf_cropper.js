@@ -1,151 +1,208 @@
-// ? GETTING DOC ELEMENTS
-const pdfInput = document.getElementById("pdfUpload")
-const applyCropBtn = document.getElementById("applyCrop");
-const aspectRatioSelect = document.getElementById("aspectRatio");
-const downloadCroppedBtn = document.getElementById("downloadCrop");
+// ================================
+// ELEMENTS
+// ================================
+const pdfInput = document.getElementById("pdfUpload");
+const applyBtn = document.getElementById("applyCrop");
+const downloadBtn = document.getElementById("downloadCrop");
+const resetBtn = document.getElementById("resetCrop");
+const aspectSelect = document.getElementById("aspectRatio");
+const pageSelect = document.getElementById("pageSelect");
 
-// ? VARIABLES
+let canvas = document.getElementById("pdfCanvas");
+let ctx = canvas.getContext("2d");
+
+
+// ================================
+// STATE
+// ================================
 let pdfDoc = null;
 let currentPage = 1;
 let cropper = null;
-let croppedImageData = null;
 
-// ? SETTING UP CANVAS
-const canvas = document.getElementById("pdfCanvas");
-const ctx = canvas.getContext("2d");
+// 🔥 KEY IDEA: store crop per page
+let pageCrops = {};
 
-// & PDF FETCHING FUNCTIONALITY
-pdfInput.addEventListener("change", async function (e) {
+
+// ================================
+// LOAD PDF
+// ================================
+pdfInput.addEventListener("change", async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    const fileReader = new FileReader();
+    const bytes = new Uint8Array(await file.arrayBuffer());
 
-    fileReader.onload = async function () {
-        const typedarray = new Uint8Array(this.result);
+    pdfDoc = await pdfjsLib.getDocument(bytes).promise;
 
-        // Load PDF
-        pdfDoc = await pdfjsLib.getDocument(typedarray).promise;
+    buildPageSelector(pdfDoc.numPages);
 
-        renderPage(currentPage);
-    };
-
-    fileReader.readAsArrayBuffer(file);
+    renderPage(1);
 });
 
-// * FUNCTION TO RENDER PDF PAGE
-async function renderPage(pageNum) {
-    const page = await pdfDoc.getPage(pageNum);
 
-    const viewport = page.getViewport({ scale: 1.5 });
+// ================================
+// BUILD PAGE DROPDOWN
+// ================================
+function buildPageSelector(total) {
+    pageSelect.innerHTML = "";
+
+    for (let i = 1; i <= total; i++) {
+        const opt = document.createElement("option");
+        opt.value = i;
+        opt.textContent = `Page ${i}`;
+        pageSelect.appendChild(opt);
+    }
+}
+
+pageSelect.addEventListener("change", () => {
+    currentPage = Number(pageSelect.value);
+    renderPage(currentPage);
+});
+
+
+// ================================
+// RENDER PAGE
+// ================================
+async function renderPage(num) {
+
+    if (cropper) cropper.destroy();
+
+    const panel = document.querySelector(".left-panel");
+    panel.innerHTML = "";
+
+    canvas = document.createElement("canvas");
+    panel.appendChild(canvas);
+
+    ctx = canvas.getContext("2d");
+
+    const page = await pdfDoc.getPage(num);
+    const viewport = page.getViewport({ scale: 1.0 });
 
     canvas.width = viewport.width;
     canvas.height = viewport.height;
 
     await page.render({
         canvasContext: ctx,
-        viewport: viewport
+        viewport
     }).promise;
 
     initCropper();
 }
 
-// * FUNCTION TO INITIALIZE CROPPER.JS
+// ================================
+// CROPPER
+// ================================
 function initCropper() {
-    if (cropper) {
-        cropper.destroy();
-    }
 
-    // Convert canvas to image for Cropper
+    if (cropper) cropper.destroy();
+
     const img = document.createElement("img");
-    img.src = canvas.toDataURL("image/png");
+    img.src = canvas.toDataURL();
+    img.style.maxWidth = "100%";
 
-    canvas.replaceWith(img);
-    img.id = "pdfCanvas";
+    const panel = document.querySelector(".left-panel");
+    panel.innerHTML = "";
+    panel.appendChild(img);
 
     cropper = new Cropper(img, {
         viewMode: 1,
-        dragMode: "crop",
-        autoCropArea: 0.7,
-        responsive: true,
+        autoCropArea: 0.8,
+        responsive: true
     });
+
+    // restore previous crop
+    if (pageCrops[currentPage]) {
+        cropper.setData(pageCrops[currentPage]);
+    }
 }
 
-// & Apply Crop Button FUNCTIONALITY
-applyCropBtn.addEventListener("click", function () {
+// ================================
+// SAVE CROP FOR CURRENT PAGE
+// ================================
+applyBtn.addEventListener("click", () => {
+
     if (!cropper) return;
 
-    const croppedCanvas = cropper.getCroppedCanvas();
+    const crop = cropper.getData(true);
 
-    // Replace preview with cropped result
-    croppedImageData = croppedCanvas.toDataURL("image/png");
-    cropper.destroy();
+    pageCrops[currentPage] = {
+        x: crop.x,
+        y: crop.y,
+        width: crop.width,
+        height: crop.height
+    };
 
-    const newImg = document.createElement("img");
-    newImg.src = croppedCanvas.toDataURL("image/png");
-    newImg.style.maxWidth = "100%";
-
-    document.querySelector(".left-panel").innerHTML = "";
-    document.querySelector(".left-panel").appendChild(newImg);
+    alert(`Crop saved for Page ${currentPage}`);
 });
 
-// & CUSTOM ASPECT RATIO FUNCTIONALITY
-aspectRatioSelect.addEventListener("change", function () {
-    if (!cropper) {return};
 
-    const value = this.value;
+// ================================
+// ASPECT RATIO
+// ================================
+aspectSelect.addEventListener("change", function () {
+    if (!cropper) return;
 
-    if (value === "free") {cropper.setAspectRatio(NaN)};
-    if (value === "sq") {cropper.setAspectRatio(1)};
-    if (value === "a4") {cropper.setAspectRatio(210 / 297)};
-    if (value === "letter") {cropper.setAspectRatio(8.5 / 11)};
+    const v = this.value;
+
+    if (v === "free") cropper.setAspectRatio(NaN);
+    if (v === "sq") cropper.setAspectRatio(1);
+    if (v === "a4") cropper.setAspectRatio(210 / 297);
+    if (v === "letter") cropper.setAspectRatio(8.5 / 11);
 });
 
-// & DOWNLOAD CROPPED PDF FUNCTIONALITY
-downloadCroppedBtn.addEventListener("click", async function () {
 
-    // CONDITIONAL STATEMENTS
-    if (!pdfDoc) {
-        alert("Please upload a PDF first!");
-        return;
+// ================================
+// RESET PAGE
+// ================================
+resetBtn.addEventListener("click", () => {
+
+    delete pageCrops[currentPage];
+
+    renderPage(currentPage);
+});
+
+
+// ================================
+// MULTI PAGE EXPORT
+// ================================
+downloadBtn.addEventListener("click", async () => {
+
+    if (!pdfDoc) return alert("Upload PDF first");
+
+    const originalBytes = await pdfDoc.getData();
+
+    const pdfLibDoc = await PDFLib.PDFDocument.load(originalBytes);
+
+    for (let i = 0; i < pdfLibDoc.getPageCount(); i++) {
+
+        const crop = pageCrops[i + 1];
+        if (!crop) continue;
+
+        const page = pdfLibDoc.getPage(i);
+
+        const { width, height } = page.getSize();
+
+        const imgW = cropper.imageData.naturalWidth;
+        const imgH = cropper.imageData.naturalHeight;
+
+        const scaleX = width / imgW;
+        const scaleY = height / imgH;
+
+        const x = crop.x * scaleX;
+        const w = crop.width * scaleX;
+        const h = crop.height * scaleY;
+
+        const y = height - (crop.y + crop.height) * scaleY;
+
+        page.setCropBox(x, y, w, h);
     }
 
-    if (!croppedImageData) {
-        alert("Please crop before exporting!");
-        return;
-    }
+    const newBytes = await pdfLibDoc.save();
 
-    // LOAD IMAGE DATA
-    const pdfBytes = await pdfDoc.getData();
-    const pdfLibDoc = await PDFLib.PDFDocument.load(pdfBytes);
-    const page = pdfLibDoc.getPage(currentPage - 1);
-    const pngImage = await pdfLibDoc.embedPng(croppedImageData);
-    const { width, height } = page.getSize();
+    const blob = new Blob([newBytes], { type: "application/pdf" });
 
-    // SETUP BACKGROUND
-    page.drawRectangle({
-        x: 0,
-        y: 0,
-        width: 2480,
-        height: 3508,
-        color: PDFLib.rgb(1, 1, 1),
-    });
-
-    // RENDERING CROPPED IMAGE
-    page.drawImage(pngImage, {
-        x: 0,
-        y: 0,
-        width: width,
-        height: height,
-    });
-
-    const newPdfBytes = await pdfLibDoc.save();
-
-    // Download file
-    const blob = new Blob([newPdfBytes], { type: "application/pdf" });
-    const link = document.createElement("a");
-
-    link.href = URL.createObjectURL(blob);
-    link.download = "cropped.pdf";
-    link.click();
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "cropped_pages.pdf";
+    a.click();
 });

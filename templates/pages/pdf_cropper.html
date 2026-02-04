@@ -19,18 +19,6 @@
     {% include 'components/header.html' %}
 
     <main class="main column gap-50">
-
-        <!-- Top Controls -->
-        <section class="controls">
-            <section class="section res-row h-sb gap-20">
-                <!-- Back Button -->
-                <a href="/" class="link btn icon-ot">
-                    <span class="symbol">arrow_left_alt</span>
-                    Back
-                </a>
-            </section>
-        </section>
-
         <!-- PDF Crop Workspace -->
         <section class="pdf-crop-area">
             <section class="section flex gap-50">
@@ -55,7 +43,7 @@
                     <div class="tool-card">
                         <h3 class="h3">Page Selection</h3>
                         <label>Choose Page</label>
-                        <select>
+                        <select id="pageSelect">
                             <option>Page 1</option>
                             <option>Page 2</option>
                             <option>Page 3</option>
