@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     <link rel="shortcut icon" href="{{ url_for('static', filename='assets/icons/icon.ico') }}" type="image/x-icon">
     <title>Seller toolset</title>
 
@@ -11,6 +12,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/home.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/anim/home.css') }}">
 </head>
+
 <body>
     {% include 'components/header.html' %}
 
@@ -30,7 +32,8 @@
                 </div>
 
                 <div class="right">
-                    <img src="{{ url_for('static', filename='assets/images/hero-img.png') }}" alt="Image showing usecase of PDF cropper" class="img">
+                    <img src="{{ url_for('static', filename='assets/images/hero-img.png') }}"
+                        alt="Image showing usecase of PDF cropper" class="img">
                 </div>
             </section>
         </section>
@@ -47,32 +50,38 @@
                 <div class="body grid gap-20">
                     <a href="/tools/pdf-cropper/" class="tool link column gap-20">
                         <div class="row gap-10">
-                            <img src="{{ url_for('static', filename='assets/icons/pdf.png') }}" alt="PDF cropper" class="icon">
+                            <img src="{{ url_for('static', filename='assets/icons/pdf.png') }}" alt="PDF cropper"
+                                class="icon">
 
                             <h2 class="h2">PDF Cropper</h2>
                         </div>
 
-                        <p class="para">Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis labore beatae nemo est reprehenderit obcaecati iste ullam voluptatum minima ratione?</p>
+                        <p class="para">Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis labore
+                            beatae nemo est reprehenderit obcaecati iste ullam voluptatum minima ratione?</p>
                     </a>
-                    
+
                     <a href="/tools/pr-calculator/" class="tool link column gap-20">
                         <div class="row gap-10">
-                            <img src="{{ url_for('static', filename='assets/icons/pr-calc.png') }}" alt="PR Calculator" class="icon">
+                            <img src="{{ url_for('static', filename='assets/icons/pr-calc.png') }}" alt="PR Calculator"
+                                class="icon">
 
                             <h2 class="h2">PR Calculator</h2>
                         </div>
 
-                        <p class="para">Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis labore beatae nemo est reprehenderit obcaecati iste ullam voluptatum minima ratione?</p>
+                        <p class="para">Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis labore
+                            beatae nemo est reprehenderit obcaecati iste ullam voluptatum minima ratione?</p>
                     </a>
-                    
+
                     <a href="/tools/price-calculator/" class="tool link column gap-20">
                         <div class="row gap-10">
-                            <img src="{{ url_for('static', filename='assets/icons/sp-calc.png') }}" alt="Price Calculator" class="icon">
+                            <img src="{{ url_for('static', filename='assets/icons/sp-calc.png') }}"
+                                alt="Price Calculator" class="icon">
 
                             <h2 class="h2">Price calculator</h2>
                         </div>
 
-                        <p class="para">Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis labore beatae nemo est reprehenderit obcaecati iste ullam voluptatum minima ratione?</p>
+                        <p class="para">Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis labore
+                            beatae nemo est reprehenderit obcaecati iste ullam voluptatum minima ratione?</p>
                     </a>
                 </div>
             </section>
@@ -86,4 +95,5 @@
         </section>
     </main>
 </body>
+
 </html>

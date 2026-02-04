@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/icons/icon.ico') }}" type="image/x-icon">
+    <title>PDF Cropper | Seller Toolset</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/pdf_cropper.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/anim/pdf_cropper.css') }}">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" />
+</head>
+
+<body>
+    {% include 'components/header.html' %}
+
+    <main class="main column gap-50">
+
+        <!-- Top Controls -->
+        <section class="controls">
+            <section class="section res-row h-sb gap-20">
+                <!-- Back Button -->
+                <a href="/" class="link btn icon-ot">
+                    <span class="symbol">arrow_left_alt</span>
+                    Back
+                </a>
+            </section>
+        </section>
+
+        <!-- PDF Crop Workspace -->
+        <section class="pdf-crop-area">
+            <section class="section flex gap-50">
+
+                <!-- LEFT PANEL -->
+                <div class="left-panel">
+                    <canvas id="pdfCanvas"></canvas>
+                </div>
+
+
+                <!-- RIGHT PANEL -->
+                <div class="right-panel column gap-20">
+
+                    <!-- Upload Tool -->
+                    <div class="tool-card">
+                        <h3 class="h3">Upload PDF</h3>
+                        <label>Select File</label>
+                        <input id="pdfUpload" type="file" accept="application/pdf">
+                    </div>
+
+                    <!-- Page Selector -->
+                    <div class="tool-card">
+                        <h3 class="h3">Page Selection</h3>
+                        <label>Choose Page</label>
+                        <select>
+                            <option>Page 1</option>
+                            <option>Page 2</option>
+                            <option>Page 3</option>
+                        </select>
+                    </div>
+
+                    <!-- Aspect Ratio Tool -->
+                    <div class="tool-card">
+                        <h3 class="h3">Aspect Ratio</h3>
+                        <label>Crop Preset</label>
+                        <select id="aspectRatio">
+                            <option value="free">Free</option>
+                            <option value="a4">A4</option>
+                            <option value="letter">Letter</option>
+                            <option value="sq">Square (1:1)</option>
+                        </select>
+                    </div>
+
+                    <!-- Scope Tool -->
+                    <div class="tool-card column gap-10">
+                        <button class="btn fl" id="applyCrop">Apply crop</button>
+                        <button class="btn fl" id="downloadCrop">Download</button>
+                        <button class="btn ot" id="resetCrop">Reset</button>
+                    </div>
+                </div>
+            </section>
+        </section>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+
+    <script src="{{ url_for('static', filename='js/pages/pdf_cropper.js') }}"></script>
+</body>
+
+</html>
