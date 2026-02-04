@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/icons/icon.ico') }}" type="image/x-icon">
+    <title>Seller toolset</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/home.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/anim/home.css') }}">
+</head>
+<body>
+    {% include 'components/header.html' %}
+
+    <main class="main column gap-100">
+        <section class="hero">
+            <section class="section row gap-50">
+                <div class="left column gap-20">
+                    <h1 class="h1">
+                        <p>Crop PDFs.</p>
+                        <p>Calculate prices.</p>
+                        <p>Track returns.</p>
+                    </h1>
+
+                    <h3 class="h3">All-in-one workspace for documents and business math.</h3>
+
+                    <a href="/tools/pdf-cropper/" class="link btn fl">Start with PDF cropper</a>
+                </div>
+
+                <div class="right">
+                    <img src="{{ url_for('static', filename='assets/images/hero-img.png') }}" alt="Image showing usecase of PDF cropper" class="img">
+                </div>
+            </section>
+        </section>
+
+        <hr class="divider">
+
+        <section class="tools" id="tools">
+            <section class="section column gap-50">
+                <div class="head column v-center gap-10">
+                    <h1 class="h1">Explore tools</h1>
+                    <p class="para">Explore a curated selection of tools built for optimizing business math.</p>
+                </div>
+
+                <div class="body grid gap-20">
+                    <div class="tool column gap-20">
+                        <div class="row gap-10">
+                            <img src="{{ url_for('static', filename='assets/icons/pdf.png') }}" alt="PDF cropper" class="icon">
+
+                            <h2 class="h2">PDF Cropper</h2>
+                        </div>
+
+                        <p class="para">Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis labore beatae nemo est reprehenderit obcaecati iste ullam voluptatum minima ratione?</p>
+                    </div>
+                    
+                    <div class="tool column gap-20">
+                        <div class="row gap-10">
+                            <img src="{{ url_for('static', filename='assets/icons/pr-calc.png') }}" alt="PR Calculator" class="icon">
+
+                            <h2 class="h2">PR Calculator</h2>
+                        </div>
+
+                        <p class="para">Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis labore beatae nemo est reprehenderit obcaecati iste ullam voluptatum minima ratione?</p>
+                    </div>
+                    
+                    <div class="tool column gap-20">
+                        <div class="row gap-10">
+                            <img src="{{ url_for('static', filename='assets/icons/sp-calc.png') }}" alt="Price Calculator" class="icon">
+
+                            <h2 class="h2">Price calculator</h2>
+                        </div>
+
+                        <p class="para">Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis labore beatae nemo est reprehenderit obcaecati iste ullam voluptatum minima ratione?</p>
+                    </div>
+                </div>
+            </section>
+        </section>
+
+        <section class="strip">
+            <section class="section column v-center gap-20">
+                <p class="para">“Built for creators, freelancers & sellers”</p>
+                <a href="#tools" class="link btn fl">Get started</a>
+            </section>
+        </section>
+    </main>
+</body>
+</html>

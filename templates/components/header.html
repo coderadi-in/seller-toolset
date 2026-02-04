@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='css/components/header.css') }}">
+
+<header class="header">
+    <section class="section column gap-10">
+        <div class="content row h-sb">
+            <img src="{{ url_for('static', filename='assets/icons/logo.png') }}" alt="Toolset logo" class="logo">
+
+            <ul class="list row gap-20">
+                <li>
+                    <a href="#tools" class="link">
+                        <span class="symbol">function</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="/tools/pdf-cropper/" class="link">
+                        <span class="symbol">crop</span>
+                    </a>
+                </li>
+
+                <li>
+                    <button class="btn" id="theme-control">
+                        <span class="symbol">contrast</span>
+                    </button>
+                </li>
+            </ul>
+        </div>
+
+        <hr class="divider">
+    </section>
+</header>
+
+<script src="{{ url_for('static', filename='js/components/header.js') }}"></script>
