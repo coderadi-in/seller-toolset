@@ -15,9 +15,9 @@
 /* | STATS-CARD [END] */
 
 /* | RIGHT PANEL STATS CARD [START] */
-.right-panel .input-row .output.text {color: var(--color-accent-red);}
+.right-panel .input-row .output.text {color: var(--color-accent-green);}
 
 /* & RESPONSIVE VERSIONS */
-@media (max-width: 1090px) {
+@media (max-width: 1024px) {
     .calculator .section {flex-direction: column;}
 }

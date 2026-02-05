@@ -3,32 +3,18 @@
 <header class="header">
     <section class="section column gap-10">
         <div class="content row h-sb">
+            <ul class="list row gap-20">
+                <li><a href="/" class="link"><span class="symbol fl-icon">home</span></a></li>
+                <li><a href="#tools" class="link"><span class="symbol">function</span></a></li>
+                <li><button class="btn link" id="theme-control"><span class="symbol">contrast</span></button></li>
+            </ul>
+
             <img src="{{ url_for('static', filename='assets/icons/logo.png') }}" alt="Toolset logo" class="logo">
 
             <ul class="list row gap-20">
-                <li>
-                    <a href="/" class="link">
-                        <span class="symbol fl-icon">home</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#tools" class="link">
-                        <span class="symbol">function</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="/tools/pdf-cropper/" class="link">
-                        <span class="symbol">crop</span>
-                    </a>
-                </li>
-
-                <li>
-                    <button class="btn link" id="theme-control">
-                        <span class="symbol">contrast</span>
-                    </button>
-                </li>
+                <li><a href="/tools/pdf-cropper/" class="link"><span class="symbol">crop</span></a></li>
+                <li><a href="/tools/cr-calculator/" class="link"><span class="symbol">trending_down</span></a></li>
+                <li><a href="/tools/price-calculator/" class="link"><span class="symbol">sell</span></a></li>
             </ul>
         </div>
 

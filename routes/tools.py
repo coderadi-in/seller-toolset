@@ -15,3 +15,8 @@ def pdf_cropper():
 @tools.route('/cr-calculator/')
 def cr_calculator():
     return render_template('pages/cr_calculator.html')
+
+# & PRICE CALCULATOR ROUTE
+@tools.route('/price-calculator/')
+def price_calculator():
+    return render_template('pages/price_calculator.html')
