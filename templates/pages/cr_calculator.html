@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/icons/icon.ico') }}" type="image/x-icon">
+    <title>CR Calculator | Seller Toolset</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/cr_calculator.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/anim/cr_calculator.css') }}">
+</head>
+
+<body>
+    {% include 'components/header.html' %}
+
+    <main class="main column gap-100">
+        <section class="calculator">
+            <section class="section flex gap-40">
+                <div class="left-panel column gap-20">
+                    <div class="stats-card column gap-10">
+                        <div class="heading column">
+                            <h3 class="h3">Customer Return (CR)</h3>
+                            <hr class="divider">
+                        </div>
+
+                        <div class="body column gap-10">
+                            <div class="input-row res-row h-sb gap-5">
+                                <label class="row gap-10" for="returnRate">
+                                    <span class="symbol fl-icon">box</span>
+                                    <span class="text">Return rate (%)</span>
+                                </label>
+                                <input type="number" name="returnRate" id="returnRate" class="input"
+                                    placeholder="e.g.: 5%, 10%">
+                            </div>
+                            <hr class="divider">
+
+                            <div class="input-row res-row h-sb gap-5">
+                                <label class="row gap-10" for="forwardShipping">
+                                    <span class="symbol fl-icon">local_shipping</span>
+                                    <span class="text">Forward Shipping (₹)</span>
+                                </label>
+                                <input type="number" name="forwardShipping" id="forwardShipping" class="input">
+                            </div>
+                            <hr class="divider">
+
+                            <div class="input-row res-row h-sb gap-5">
+                                <label class="row gap-10" for="backwardShipping">
+                                    <span class="symbol fl-icon">local_shipping</span>
+                                    <span class="text">Backward Shipping (₹)</span>
+                                </label>
+                                <input type="number" name="backwardShipping" id="backwardShipping" class="input">
+                            </div>
+                            <hr class="divider">
+
+                            <div class="input-row res-row h-sb gap-5">
+                                <label class="row gap-10" for="packagingCost">
+                                    <span class="symbol fl-icon">package_2</span>
+                                    <span class="text">Packaging Cost (₹)</span>
+                                </label>
+                                <input type="number" name="packagingCost" id="packagingCost" class="input">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stats-card column gap-10">
+                        <div class="heading column">
+                            <h3 class="h3">RTO (Courier Return)</h3>
+                            <hr class="divider">
+                        </div>
+
+                        <div class="body column gap-10">
+                            <div class="input-row res-row h-sb gap-5">
+                                <label class="row gap-10" for="rtoRate">
+                                    <span class="symbol fl-icon">moped</span>
+                                    <span class="text">RTO Rate (%)</span>
+                                </label>
+                                <input type="number" name="rtoRate" id="rtoRate" class="input"
+                                    placeholder="e.g.: 5%, 10%">
+                            </div>
+                            <hr class="divider">
+
+                            <div class="input-row res-row h-sb gap-5">
+                                <label class="row gap-10" for="rtoCharge">
+                                    <span class="symbol fl-icon">toll</span>
+                                    <span class="text">RTO Charge (₹)</span>
+                                </label>
+                                <input type="number" name="rtoCharge" id="rtoCharge" class="input">
+                            </div>
+                        </div>
+                    </div>
+
+                    <ul class="list res-row gap-10">
+                        <li><button class="btn fl" id="calcbtn">Calculate</button></li>
+                        <li><button class="btn ot" id="resbtn">Reset</button></li>
+                    </ul>
+                </div>
+
+                <div class="right-panel">
+                    <div class="stats-card column gap-10">
+                        <div class="heading column">
+                            <div class="row h-sb">
+                                <h3 class="h3">Summary</h3>
+                                <span class="symbol">toc</span>
+                            </div>
+                            <hr class="divider">
+                        </div>
+
+                        <div class="body column gap-10">
+                            <div class="input-row res-row h-sb gap-5">
+                                <label class="row gap-10" for="crLoss">
+                                    <span class="symbol fl-icon">trending_down</span>
+                                    <span class="text">CR Loss per order (₹)</span>
+                                </label>
+                                <span class="output text" id="crLoss">₹ 0.00</span>
+                            </div>
+                            <hr class="divider">
+
+                            <div class="input-row res-row h-sb gap-5">
+                                <label class="row gap-10" for="rtoLoss">
+                                    <span class="symbol fl-icon">toll</span>
+                                    <span class="text">RTO Loss per order (₹)</span>
+                                </label>
+                                <span class="output text" id="rtoLoss">₹ 0.00</span>
+                            </div>
+                            <hr class="divider">
+
+                            <div class="input-row res-row h-sb gap-5">
+                                <label class="row gap-10" for="totalLoss">
+                                    <span class="symbol fl-icon">equal</span>
+                                    <span class="text">Total Loss/order (₹)</span>
+                                </label>
+                                <span class="output text" id="totalLoss">₹ 0.00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </section>
+
+        <script src="{{ url_for('static', filename='js/pages/cr_calculator.js') }}"></script>
+    </main>
+</body>
+
+</html>

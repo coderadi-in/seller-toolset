@@ -1,0 +1,23 @@
+/* | CALCULATOR UI [START] */
+.calculator .left-panel,
+.calculator .right-panel {flex: 1;}
+
+/* | STATS-CARDS [START] */
+.stats-card {
+    background-color: var(--color-bg-card);
+    border-radius: 8px;
+}
+
+.stats-card .heading .h3 {padding: 20px;}
+.stats-card .heading .symbol {padding: 20px;}
+
+.stats-card .body {padding: 20px;}
+/* | STATS-CARD [END] */
+
+/* | RIGHT PANEL STATS CARD [START] */
+.right-panel .input-row .output.text {color: #DD403A;}
+
+/* & RESPONSIVE VERSIONS */
+@media (max-width: 1090px) {
+    .calculator .section {flex-direction: column;}
+}
