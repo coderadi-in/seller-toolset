@@ -1,73 +1,45 @@
-/* | CONTROLS [START] */
-.controls .section {padding: 20px;}
-
-.controls .action-buttons .btn {
-    padding: 0;
-    background-color: transparent;
-    color: var(--color-text-main);
-}
-/* | CONTROLS [END] */
-
-/* | PDF CROP AREA [START] */
-.pdf-crop-area {
-    min-height: 80vh;
-}
-
-/* || LEFT PANEL [START] */
-.pdf-crop-area .left-panel {
-    background: var(--color-bg-card);
-    border: 1px solid var(--color-border-light);
-    border-radius: 16px;
-    width: 70%;
-}
-/* || LEFT PANEL [END] */
-
-/* || RIGHT PANEL [START] */
-.right-panel {
-    background: var(--color-bg-card);
-    border: 1px solid var(--color-border-light);
-    border-radius: 16px;
-    padding: 25px;
-    height: fit-content;
-    width: 30%;
-}
-
-.right-panel .tool-card {
-    border: 1px solid var(--color-border);
-    border-radius: 14px;
-    padding: 15px;
-}
-
-.tool-card .h3 {
-    margin-bottom: 10px;
-    font-size: var(--f2);
-    font-family: "Roboto Condensed", sans-serif;
-}
-
-.tool-card label {
-    font-size: var(--f0);
-    color: var(--color-text-muted);
-}
-
-select,
-input[type="file"] {
-    width: 100%;
-    margin-top: 8px;
-    padding: 10px;
+/* | PDF CROP [START] */
+.pdf-crop .form {
+    max-width: 700px;
+    background-color: var(--color-bg-card);
     border-radius: 8px;
-    border: 1px solid var(--color-border-light);
-    outline: none;
+    padding: 20px;
+    margin: 0 auto;
 }
 
-input[type="file"] {
-    background-color: var(--color-bg-main);
+.pdf-crop .area {
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 10px;
 }
-/* || RIGHT PANEL [END] */
-/* | PDF CROP AREA [END] */
+/* | PDF CROP [END] */
 
-/* & RESPONSIVE VERSIONS */
-@media (max-width: 768px) {
-    .pdf-crop-area .section {
-        flex-direction: column;
-    }
+/* | INFO [START] */
+.info {display: none;}
+
+.info .info-area {
+    width: min(80vw, 700px);
+    margin: 0 auto;
+    background-color: var(--color-bg-card);
+    padding: 20px;
+    border-radius: 8px;
 }
+
+/* | DOC SECTION [START] */
+.doc .body {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.doc .body .step {
+    background-color: var(--color-bg-card);
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.doc .body .index {
+    width: fit-content;
+    font-size: 2rem;
+    margin-left: auto;
+}
+/* | DOC SECTION [END] */

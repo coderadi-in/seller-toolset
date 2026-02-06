@@ -1,208 +1,76 @@
-// ================================
-// ELEMENTS
-// ================================
-const pdfInput = document.getElementById("pdfUpload");
-const applyBtn = document.getElementById("applyCrop");
-const downloadBtn = document.getElementById("downloadCrop");
-const resetBtn = document.getElementById("resetCrop");
-const aspectSelect = document.getElementById("aspectRatio");
-const pageSelect = document.getElementById("pageSelect");
+const statusTexts = [
+    "Parsing PDF file",
+    "Reading PDF",
+    "Extracting Text",
+    "Detecting Label",
+    "Cropping Label",
+    "Added Label to new PDF",
+    "Checking for next page"
+]
 
-let canvas = document.getElementById("pdfCanvas");
-let ctx = canvas.getContext("2d");
+// ? GET DOC ELEMENTS
+const form = document.querySelector('.form');
+const submitBtn = document.getElementById('startCrop');
+const submitBtnSymbol = document.querySelector("#startCrop .symbol");
+const submitBtnText = document.querySelector("#startCrop .text");
 
+const infoSection = document.querySelector('.info');
+const statusIcon = document.querySelector('.info .status .symbol');
+const statusText = document.querySelector('.info .status .text');
+const currentState = document.getElementById("currentState");
+let statusIntervalId = null;
 
-// ================================
-// STATE
-// ================================
-let pdfDoc = null;
-let currentPage = 1;
-let cropper = null;
+// & FORM SUBMISSION RESPONSE FUNCTIONALITY
+form.addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-// 🔥 KEY IDEA: store crop per page
-let pageCrops = {};
+    // ===== UI START STATE =====
+    submitBtn.disabled = true;
+    submitBtnSymbol.innerHTML = "progress_activity";
+    submitBtnSymbol.classList.add('rotate');
+    submitBtnText.innerHTML = "Cropping...";
 
+    infoSection.style.display = "flex";
+    statusIcon.classList.add('rotate');
 
-// ================================
-// LOAD PDF
-// ================================
-pdfInput.addEventListener("change", async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+    let statusIndex = 0;
+    currentState.textContent = statusTexts[statusIndex];
 
-    const bytes = new Uint8Array(await file.arrayBuffer());
+    statusIntervalId = setInterval(() => {
+        statusIndex = (statusIndex + 1) % statusTexts.length;
+        currentState.textContent = statusTexts[statusIndex];
+    }, 500);
 
-    pdfDoc = await pdfjsLib.getDocument(bytes).promise;
+    try {
+        const formData = new FormData(form);
 
-    buildPageSelector(pdfDoc.numPages);
+        const res = await fetch(form.action, {
+            method: "POST",
+            body: formData
+        });
 
-    renderPage(1);
-});
+        const blob = await res.blob();
 
+        // TRIGGER DOWNLOAD
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "cropped_label.pdf";
+        a.click();
 
-// ================================
-// BUILD PAGE DROPDOWN
-// ================================
-function buildPageSelector(total) {
-    pageSelect.innerHTML = "";
+        window.URL.revokeObjectURL(url);
 
-    for (let i = 1; i <= total; i++) {
-        const opt = document.createElement("option");
-        opt.value = i;
-        opt.textContent = `Page ${i}`;
-        pageSelect.appendChild(opt);
-    }
-}
-
-pageSelect.addEventListener("change", () => {
-    currentPage = Number(pageSelect.value);
-    renderPage(currentPage);
-});
-
-
-// ================================
-// RENDER PAGE
-// ================================
-async function renderPage(num) {
-
-    if (cropper) cropper.destroy();
-
-    const panel = document.querySelector(".left-panel");
-    panel.innerHTML = "";
-
-    canvas = document.createElement("canvas");
-    panel.appendChild(canvas);
-
-    ctx = canvas.getContext("2d");
-
-    const page = await pdfDoc.getPage(num);
-    const viewport = page.getViewport({ scale: 1.0 });
-
-    canvas.width = viewport.width;
-    canvas.height = viewport.height;
-
-    await page.render({
-        canvasContext: ctx,
-        viewport
-    }).promise;
-
-    initCropper();
-}
-
-// ================================
-// CROPPER
-// ================================
-function initCropper() {
-
-    if (cropper) cropper.destroy();
-
-    const img = document.createElement("img");
-    img.src = canvas.toDataURL();
-    img.style.maxWidth = "100%";
-
-    const panel = document.querySelector(".left-panel");
-    panel.innerHTML = "";
-    panel.appendChild(img);
-
-    cropper = new Cropper(img, {
-        viewMode: 1,
-        autoCropArea: 0.8,
-        responsive: true
-    });
-
-    // restore previous crop
-    if (pageCrops[currentPage]) {
-        cropper.setData(pageCrops[currentPage]);
-    }
-}
-
-// ================================
-// SAVE CROP FOR CURRENT PAGE
-// ================================
-applyBtn.addEventListener("click", () => {
-
-    if (!cropper) return;
-
-    const crop = cropper.getData(true);
-
-    pageCrops[currentPage] = {
-        x: crop.x,
-        y: crop.y,
-        width: crop.width,
-        height: crop.height
-    };
-
-    alert(`Crop saved for Page ${currentPage}`);
-});
-
-
-// ================================
-// ASPECT RATIO
-// ================================
-aspectSelect.addEventListener("change", function () {
-    if (!cropper) return;
-
-    const v = this.value;
-
-    if (v === "free") cropper.setAspectRatio(NaN);
-    if (v === "sq") cropper.setAspectRatio(1);
-    if (v === "a4") cropper.setAspectRatio(210 / 297);
-    if (v === "letter") cropper.setAspectRatio(8.5 / 11);
-});
-
-
-// ================================
-// RESET PAGE
-// ================================
-resetBtn.addEventListener("click", () => {
-
-    delete pageCrops[currentPage];
-
-    renderPage(currentPage);
-});
-
-
-// ================================
-// MULTI PAGE EXPORT
-// ================================
-downloadBtn.addEventListener("click", async () => {
-
-    if (!pdfDoc) return alert("Upload PDF first");
-
-    const originalBytes = await pdfDoc.getData();
-
-    const pdfLibDoc = await PDFLib.PDFDocument.load(originalBytes);
-
-    for (let i = 0; i < pdfLibDoc.getPageCount(); i++) {
-
-        const crop = pageCrops[i + 1];
-        if (!crop) continue;
-
-        const page = pdfLibDoc.getPage(i);
-
-        const { width, height } = page.getSize();
-
-        const imgW = cropper.imageData.naturalWidth;
-        const imgH = cropper.imageData.naturalHeight;
-
-        const scaleX = width / imgW;
-        const scaleY = height / imgH;
-
-        const x = crop.x * scaleX;
-        const w = crop.width * scaleX;
-        const h = crop.height * scaleY;
-
-        const y = height - (crop.y + crop.height) * scaleY;
-
-        page.setCropBox(x, y, w, h);
+    } catch (err) {
+        alert("Something went wrong");
     }
 
-    const newBytes = await pdfLibDoc.save();
+    // UI RESET STATE
+    clearInterval(statusIntervalId);
 
-    const blob = new Blob([newBytes], { type: "application/pdf" });
+    submitBtn.disabled = false;
+    submitBtnSymbol.classList.remove('rotate');
+    submitBtnSymbol.innerHTML = "crop";
+    submitBtnText.innerHTML = "Crop";
 
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "cropped_pages.pdf";
-    a.click();
+    infoSection.style.display = "none";
 });
