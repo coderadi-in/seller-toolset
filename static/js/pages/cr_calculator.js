@@ -1,3 +1,6 @@
+// ? IMPORTING OBSERVER
+import { observer } from '../base/observer.js';
+
 // ? GETTING DOC ELEMENTS
 const returnRate = document.getElementById('returnRate');
 const forwardShipping = document.getElementById('forwardShipping');
@@ -81,4 +84,15 @@ resetBtn.addEventListener('click', () => {
     crLossOutput.textContent = '\u20B9 0.00';
     rtoLossOcrLossOutput.textContent = '\u20B9 0.00';
     totalLossOcrLossOutput.textContent = '\u20B9 0.00';
+})
+
+// ? GETTING SECTION ELEMENTS
+const calculatorSection = document.querySelector('.calculator');
+
+// & PREPARING OBSERVABLES ARRAY
+const observables = [calculatorSection];
+
+// & OBSERVING ELEMENTS
+observables.forEach((observable) => {
+    observer.observe(observable)
 })

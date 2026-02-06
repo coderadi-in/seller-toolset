@@ -96,7 +96,7 @@
                         </div>
                     </div>
 
-                    <ul class="list res-row gap-10">
+                    <ul class="list res-row gap-10 actions">
                         <li><button class="btn fl" id="calcbtn">Calculate</button></li>
                         <li><button class="btn ot" id="resbtn">Reset</button></li>
                     </ul>
@@ -144,7 +144,8 @@
             </section>
         </section>
 
-        <script src="{{ url_for('static', filename='js/pages/cr_calculator.js') }}"></script>
+        <script type="module" src="{{ url_for('static', filename='js/base/observer.js') }}"></script>
+        <script type="module" src="{{ url_for('static', filename='js/pages/cr_calculator.js') }}"></script>
     </main>
 </body>
 

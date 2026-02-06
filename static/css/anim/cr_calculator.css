@@ -1,0 +1,21 @@
+/* | CALCULATOR SECTION [START] */
+.calculator .stats-card,
+.calculator .actions {
+    transform: translateY(60px);
+    opacity: 0;
+    transition: 
+        transform 0.6s ease-in-out,
+        opacity 0.6s;
+}
+
+.calculator.visible .stats-card,
+.calculator.visible .actions {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.calculator .stats-card:nth-child(1) {transition-delay: 0ms;}
+.calculator .stats-card:nth-child(2) {transition-delay: 100ms;}
+.calculator .stats-card:nth-child(3) {transition-delay: 200ms;}
+.calculator .actions {transition-delay: 300ms;}
+/* | CALCULATOR SECTION [END] */
