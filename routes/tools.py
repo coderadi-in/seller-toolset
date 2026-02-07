@@ -1,7 +1,7 @@
 '''coderadi &bull; Tools routing for the project.'''
 
 # ? IMPORTING LIBRARIES
-from flask import Blueprint, render_template, redirect, url_for, flash, request, send_file
+from flask import Blueprint, render_template, redirect, url_for, flash, request, send_file, abort
 import pdfplumber
 from pypdf import PdfReader, PdfWriter
 from io import BytesIO
@@ -22,17 +22,29 @@ def crop_pdf():
     pdf_file = request.files.get('fileUpload')
     platform = request.form.get('platformSelect')
 
-    data_platform = KEYWORDS.get(platform) # ACCESS RELATED PLATFORM
-    related_keywords = data_platform.get('words') # ACCESS PLATFORM RELATED KEYWORDS
-    related_margin = data_platform.get('margin') # ACCESS PLATFORM RELATED MARGIN
-    related_cutout = data_platform.get('cutout') # ACCESS PLATFORM RELATED CUTOUT
-    lower_bounding_box = [] # STORES LOWER CORDS OF ALL FILES
+    if (pdf_file is None):
+        abort(400, description="Missing PDF file.")
+
+    data_platform = KEYWORDS.get(platform)                # ACCESS RELATED PLATFORM
+    if (data_platform is None):
+        abort(400, description="Invalid platform selection.")
+
+    related_keywords = data_platform.get('words')         # ACCESS PLATFORM RELATED KEYWORDS
+    related_margin = data_platform.get('margin')          # ACCESS PLATFORM RELATED MARGIN
+    related_cutout = data_platform.get('cutout')          # ACCESS PLATFORM RELATED CUTOUT
+
+    if (not related_keywords or len(related_keywords) < 2):
+        abort(500, description="Invalid keyword configuration.")
+        
+    if (related_margin is None or related_cutout is None):
+        abort(500, description="Invalid platform configuration.")
+
+    lower_bounding_box = []                               # STORES LOWER CORDS OF ALL FILES
 
     # DETECTING MAIN BOUNDING BOX
     with pdfplumber.open(pdf_file) as pdf:
-        lower_cord = None # INITIALIZE LOWER CORD
-
         for page in pdf.pages:
+            lower_cord = None # INITIALIZE LOWER CORD (PER PAGE)
             # EXTRACT DATA FROM PDF
             words = page.extract_words(
                 keep_blank_chars=True,
@@ -42,7 +54,7 @@ def crop_pdf():
             # EXTRACT THE LOWER CORD TO CROP
             for i, word in enumerate(words):
                 if (word.get('text') == related_keywords[0]):
-                    if (words[i+1].get('text') == related_keywords[1]):
+                    if (i + 1 < len(words) and words[i+1].get('text') == related_keywords[1]):
                         lower_cord = word.get('top') + related_margin
                         lower_bounding_box.append(lower_cord)
                         break

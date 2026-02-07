@@ -24,7 +24,7 @@ let statusIntervalId = null;
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    // ===== UI START STATE =====
+    // UI START STATE
     submitBtn.disabled = true;
     submitBtnSymbol.innerHTML = "progress_activity";
     submitBtnSymbol.classList.add('rotate');
