@@ -52,14 +52,14 @@ def crop_pdf():
             lower_cord = None # INITIALIZE LOWER CORD (PER PAGE)
             # EXTRACT DATA FROM PDF
             words = page.extract_words(
-                keep_blank_chars=True,
+                # keep_blank_chars=True,
                 use_text_flow=True,
             )
 
             # EXTRACT THE LOWER CORD TO CROP
             for i, word in enumerate(words):
                 if (word.get('text') == related_keywords[0]):
-                    if (i + 1 < len(words) and words[i+1].get('text') == related_keywords[1]):
+                    if (words[i+1].get('text') == related_keywords[1]):
                         lower_cord = word.get('top') + related_margin
                         lower_bounding_box.append(lower_cord)
                         break
