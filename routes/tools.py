@@ -39,10 +39,15 @@ def crop_pdf():
     if (related_margin is None or related_cutout is None):
         abort(500, description="Invalid platform configuration.")
 
+    # Read once into memory so both pdfplumber and pypdf use stable streams.
+    pdf_bytes = pdf_file.read()
+    if (not pdf_bytes):
+        abort(400, description="Empty PDF file.")
+
     lower_bounding_box = []                               # STORES LOWER CORDS OF ALL FILES
 
     # DETECTING MAIN BOUNDING BOX
-    with pdfplumber.open(pdf_file) as pdf:
+    with pdfplumber.open(BytesIO(pdf_bytes)) as pdf:
         for page in pdf.pages:
             lower_cord = None # INITIALIZE LOWER CORD (PER PAGE)
             # EXTRACT DATA FROM PDF
@@ -64,8 +69,7 @@ def crop_pdf():
                 lower_bounding_box.append(page.height * related_cutout)
         
     # CROP THE PDF
-    pdf_file.seek(0)
-    reader = PdfReader(pdf_file)
+    reader = PdfReader(BytesIO(pdf_bytes))
     writer = PdfWriter()
 
     # PREPARE OUTPUT PAGE
